@@ -6,7 +6,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-datalake-metadata = {file = ".", editable = true}
+datalake-metadata = {file = "."}
 
 [dev-packages]
 coverage = "*"

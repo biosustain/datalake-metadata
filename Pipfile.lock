@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "18f93ea1f18c64f65abdf1734640f82b3aa6722ff177e7093101239bba8c421e"
+            "sha256": "65f519f4080180b81e0cc31567dfe70fa7ef00ff77d6bbf90d9d826f24f5a3a6"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -25,7 +25,6 @@
             "version": "==23.2.0"
         },
         "datalake-metadata": {
-            "editable": true,
             "file": "."
         },
         "jsonschema": {
