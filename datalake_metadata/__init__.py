@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 from string import Template
-from typing import Any, Dict, Protocol, TypeAlias, TypeVar, Union, runtime_checkable
+from typing import Any, Dict, Protocol, TypeVar, Union, runtime_checkable
 
 from jsonschema import validate
 from semantic_version import SimpleSpec, Version
