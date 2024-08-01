@@ -54,7 +54,7 @@ jobs:
 
       - name: Verify package version
         run: |
-          pip show datalake-metadata
+          pipenv run pip show datalake-metadata
 
       - name: Run tests
         run: |
