@@ -6,7 +6,13 @@ from typing import Any, Dict, Protocol, TypeAlias, TypeVar, Union, runtime_check
 from jsonschema import validate
 from semantic_version import SimpleSpec, Version
 from semantic_version.base import BaseSpec
-from .version import __version__
+
+from .version import version_tuple
+
+library_version = Version(
+    **dict(zip(["major", "minor", "patch"], version_tuple[:3])),
+    **dict(zip(["prerelease", "build"], map(lambda p: [p], version_tuple[3:]))),
+)
 
 SCHEMA_PATH_TEMPLATE = Template("schemas/metadata-v${version}.schema.json")
 
@@ -14,13 +20,32 @@ Metadata: TypeAlias = Dict[str, Any]
 
 
 def validate_metadata(instance):
-    version = Version(instance["version"])
+    instance_version = Version(instance["version"])
     schema_path = Path(__file__).parent / SCHEMA_PATH_TEMPLATE.substitute(
-        version=version.truncate()
+        version=instance_version.truncate()
     )
     with open(schema_path) as schema_file:
         schema = json.load(schema_file)
         validate(instance=instance, schema=schema)
+
+
+def update_version(instance, new_version: Version) -> Version:
+    """
+    Update the version of the metadata instance
+
+    This helper method should be used in migration functions to update the version
+     of the metadata instance, denoting the library build version.
+    :param instance: metadata instance
+    :param new_version: intended version
+    :return: resolved version
+    """
+    complete_version = new_version.truncate()
+    complete_version.prerelease = library_version.prerelease
+    # if library has only tag version, use it as build version
+    # (this is the case for stable releases)
+    complete_version.build = library_version.build or str(library_version)
+    instance.update({"version": str(complete_version)})
+    return complete_version
 
 
 class Migration(Protocol):
@@ -61,16 +86,16 @@ def migrate_metadata(instance, target_version_spec: VersionSpec):
         target_version_spec = SimpleSpec(target_version_spec)
 
     current_version = Version(instance["version"])
+    for spec, migration in migrations.items():
+        if target_version_spec.match(current_version):
+            break
+        if spec.match(current_version):
+            migration(instance)
+            validate_metadata(instance)
+            current_version = Version(instance["version"])
+
     if not target_version_spec.match(current_version):
-        for spec, migration in migrations.items():
-            if spec.match(current_version):
-                migration(instance)
-                validate_metadata(instance)
-
-        migrated_version = Version(instance["version"])
-
-        if not target_version_spec.match(migrated_version):
-            raise ValueError(f"Could not migrate metadata to {target_version_spec}")
+        raise ValueError(f"Could not migrate metadata to {target_version_spec}")
 
     return instance
 
@@ -91,12 +116,11 @@ def loads(metadata: Union[str, Metadata], target_version_spec: VersionSpec) -> M
     if isinstance(metadata, str):
         metadata = json.loads(metadata)
     validate_metadata(metadata)
-    migrate_metadata(metadata, target_version_spec)
-    return metadata
+    return migrate_metadata(metadata, target_version_spec)
 
 
 # Extracted from stdlib typeshed
-_T_co = TypeVar("_T_co", str, bytes)
+_T_co = TypeVar("_T_co", str, bytes, covariant=True)
 
 
 @runtime_checkable
@@ -125,5 +149,4 @@ __all__ = [
     "migrate_metadata",
     "loads",
     "load",
-    "__version__",
 ]

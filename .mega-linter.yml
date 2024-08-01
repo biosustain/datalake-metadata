@@ -1,0 +1,24 @@
+---
+EXTENDS: https://raw.githubusercontent.com/biosustain/code-quality-check/v1.0.0/.mega-linter.yml
+
+DISABLE_LINTERS:
+  # region biosustain/code-quality-check disabled linters
+  - SQL_TSQLLINT # .NET Core is not installed - always fails
+  - JSON_V8R # Most schemas are not supported
+  - YAML_V8R # Most schemas are not supported
+  - PYTHON_ISORT # We can live without alphabetically sorted imports - something to consider in future
+  - PYTHON_PYRIGHT # I cannot get imports to work with this linter
+  - HTML_HTMLHINT # It does not align with frameworks like Angular
+  - MARKDOWN_MARKDOWN_LINK_CHECK # It is prone to false positives for internal links
+  # endregion
+  - REPOSITORY_KICS # It is too strict and does not align with our current security policies
+  - REPOSITORY_SECRETLINT # Crashes while trying to read /tmp/lint/megalinter-reports/copy-paste/html/index.html ?!
+
+# Disable errors but keep them as warnings
+DISABLE_ERRORS_LINTERS:
+  - REPOSITORY_TRIVY # We are locked with old dependencies, leaving as a warning to be addressed in the future
+  - OPENAPI_SPECTRAL # Simply cannot get it right
+  - MARKDOWN_MARKDOWNLINT # Not high priority but need to be manually curated for generated files - high effort
+  - REPOSITORY_GRYPE # We are locked with current latest msgraph-sdk==1.1.0 dependencies - with vulnerabilities
+  - API_SPECTRAL # Simply cannot get it right in openapi.yaml
+  - REPOSITORY_CHECKOV # False positives when parsing openapi.yaml https://github.com/bridgecrewio/checkov/issues/6172
