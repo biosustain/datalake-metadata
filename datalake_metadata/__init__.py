@@ -68,10 +68,8 @@ class Migration(Protocol):
 
 migrations: Dict[BaseSpec, Migration] = {}
 
-VersionSpec: TypeAlias = Union[BaseSpec, str]
 
-
-def migrate_metadata(instance, target_version_spec: VersionSpec):
+def migrate_metadata(instance, target_version_spec: Union[BaseSpec, str]):
     """
     Migrate the metadata to the target version.
     NOTE: This function modifies the instance in place.
@@ -98,7 +96,7 @@ def migrate_metadata(instance, target_version_spec: VersionSpec):
     return instance
 
 
-def loads(metadata: Union[str, Dict[str, Any]], target_version_spec: VersionSpec) -> Dict[str, Any]:
+def loads(metadata: Union[str, Dict[str, Any]], target_version_spec: Union[BaseSpec, str]) -> Dict[str, Any]:
     """Load metadata from a string or a dictionary
 
     This function also migrates the metadata to the target version if necessary.
@@ -126,7 +124,7 @@ class SupportsRead(Protocol[_T_co]):
     def read(self, __length: int = ...) -> _T_co: ...
 
 
-def load(metadata: SupportsRead, target_version_spec: VersionSpec) -> Dict[str, Any]:
+def load(metadata: SupportsRead, target_version_spec: Union[BaseSpec, str]) -> Dict[str, Any]:
     """Load metadata from a file-like object
 
     This function also migrates the metadata to the target version if necessary.
@@ -141,7 +139,6 @@ def load(metadata: SupportsRead, target_version_spec: VersionSpec) -> Dict[str, 
 
 
 __all__ = [
-    "VersionSpec",
     "validate_metadata",
     "migrate_metadata",
     "loads",
