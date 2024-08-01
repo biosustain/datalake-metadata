@@ -50,7 +50,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pipenv install --no-lock --dev --system
+          pipenv install -d --no-lock --system
 
       - name: Run tests
         run: |
