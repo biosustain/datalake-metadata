@@ -1,0 +1,45 @@
+[project]
+name = "datalake_metadata"
+dynamic = [
+  "version",
+]
+authors = [
+    { name = "Dominik Maszczyk", email = "Skitionek@gmail.com" },
+]
+maintainers = [
+    { name = "Provenance team", email = "provenance@biosustain.dtu.dk" }
+]
+description = "Python package for managing metadata in the biosustain datalake"
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "jsonschema~=4.23.0",
+    "semantic-version~=2.10.0"
+]
+
+[project.urls]
+Homepage = "https://github.com/biosustain/datalake-metadata"
+Issues = "https://github.com/biosustain/datalake-metadata/issues"
+
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling", "hatch-vcs"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "datalake_metadata/version.py"
+
+[tool.hatch.build]
+artifacts = [
+  "datalake_metadata/version.py",
+]

@@ -1,0 +1,76 @@
+---
+# .github/workflows/ci.yml
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "main"
+  workflow_dispatch:
+    inputs:
+      APPLY_FIXES:
+        description: "Automatically fix code style issues"
+        required: false
+        type: string
+        default: "all"
+
+permissions:
+  security-events: write
+  actions: read
+  contents: write
+  issues: write
+  pull-requests: write
+  statuses: write
+
+jobs:
+  test:
+    name: Run tests & display coverage
+    strategy:
+      matrix:
+        python-version: [3.9, 3.10, 3.11]
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: write
+      issues: write
+      pull-requests: write
+      statuses: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python {{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: "{{ matrix.python-version }}"
+
+      - name: Install pipenv
+        run: pip install pipenv
+
+      - name: Install dependencies
+        run: |
+          pipenv install --dev --system --no-lock
+
+      - name: Run tests
+        run: |
+          pipenv run coverage run -m pytest tests
+
+      - name: Coverage comment
+        uses: py-cov-action/python-coverage-comment-action@v3
+        with:
+          GITHUB_TOKEN: ${{ github.token }}
+
+  code-quality-check:
+    name: Code quality check
+    uses: biosustain/code-quality-check/.github/workflows/code-quality-check.yml@v1.0.0
+    with:
+      FLAVOR: python
+      JSON_ENV: ${{ inputs && toJSON(inputs) || '{}' }}
+    permissions:
+      security-events: write
+      actions: read
+      contents: write
+      issues: write
+      pull-requests: write
+      statuses: write

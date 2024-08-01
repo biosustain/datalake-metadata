@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Black">
+    <option name="sdkName" value="Pipenv (datalake-metadata)" />
+  </component>
+  <component name="KubernetesApiPersistence">
+    <option name="context" value="gke_biosustain-191811_europe-north1-a_cluster-1" />
+    <option name="namespace" value="default" />
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="Pipenv (datalake-metadata)" project-jdk-type="Python SDK" />
+</project>

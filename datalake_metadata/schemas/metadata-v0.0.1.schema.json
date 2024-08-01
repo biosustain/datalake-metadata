@@ -1,0 +1,83 @@
+{
+  "$id": "https://biosustain.dtu.dk/metadata.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Metadata",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "The semantic version of the schema.",
+      "$comment": "Regex adapted from documentation: https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string",
+      "pattern": "^0.0.1(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+    },
+    "Dataset": {
+      "type": "object",
+      "properties": {
+        "CKAN_dataset_metadata": {
+          "type": "object",
+          "properties": {
+            "dataset_id": {
+              "type": "string"
+            },
+            "data_type": {
+              "type": "string"
+            },
+            "instrument": {
+              "type": "string"
+            }
+          },
+          "required": ["dataset_id", "data_type", "instrument"]
+        },
+        "Benchling_Experiment_metadata": {
+          "type": "object",
+          "properties": {
+            "experiment_id": {
+              "type": "string"
+            },
+            "experiment_type": {
+              "type": "string"
+            }
+          },
+          "required": ["experiment_id", "experiment_type"]
+        },
+        "Benchling_Request_metadata": {
+          "type": "object",
+          "properties": {
+            "request_id": {
+              "type": "string"
+            },
+            "schema": {
+              "type": "string"
+            }
+          },
+          "required": ["request_id", "schema"]
+        }
+      }
+    },
+    "Sample_Sheet": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        }
+      },
+      "required": ["path"]
+    },
+    "CKAN_Resources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "resource_name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": ["resource_name", "path"]
+      }
+    }
+  },
+  "required": ["version", "Dataset", "Sample_Sheet", "CKAN_Resources"]
+}
