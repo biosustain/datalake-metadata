@@ -1,0 +1,17 @@
+[run]
+relative_files = true
+
+[report]
+exclude_also =
+    ; Don't complain about Protocol typing classes:
+    class \w+\(Protocol\):
+
+    ; Don't complain about abstract methods, they aren't run:
+    @(abc\.)?abstractmethod
+
+    ; Don't complain if tests don't hit defensive assertion code:
+    raise AssertionError
+    raise NotImplementedError
+
+    ; Don't complain about debug-only code:
+    if os\.getenv\("\w*DEBUG"\):
