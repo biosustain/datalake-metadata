@@ -65,6 +65,7 @@ jobs:
 
       - name: Coverage comment
         uses: py-cov-action/python-coverage-comment-action@v3
+        continue-on-error: true
         with:
           GITHUB_TOKEN: ${{ github.token }}
 

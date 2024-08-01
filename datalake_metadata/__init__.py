@@ -16,8 +16,6 @@ library_version = Version(
 
 SCHEMA_PATH_TEMPLATE = Template("schemas/metadata-v${version}.schema.json")
 
-Metadata: TypeAlias = Dict[str, Any]
-
 
 def validate_metadata(instance):
     instance_version = Version(instance["version"])
@@ -49,7 +47,7 @@ def update_version(instance, new_version: Version) -> Version:
 
 
 class Migration(Protocol):
-    def __call__(self, instance: Metadata) -> None:
+    def __call__(self, instance: Dict[str, Any]) -> None:
         """
         Migrate the metadata to the new schema
 
@@ -100,7 +98,7 @@ def migrate_metadata(instance, target_version_spec: VersionSpec):
     return instance
 
 
-def loads(metadata: Union[str, Metadata], target_version_spec: VersionSpec) -> Metadata:
+def loads(metadata: Union[str, Dict[str, Any]], target_version_spec: VersionSpec) -> Dict[str, Any]:
     """Load metadata from a string or a dictionary
 
     This function also migrates the metadata to the target version if necessary.
@@ -128,7 +126,7 @@ class SupportsRead(Protocol[_T_co]):
     def read(self, __length: int = ...) -> _T_co: ...
 
 
-def load(metadata: SupportsRead, target_version_spec: VersionSpec) -> Metadata:
+def load(metadata: SupportsRead, target_version_spec: VersionSpec) -> Dict[str, Any]:
     """Load metadata from a file-like object
 
     This function also migrates the metadata to the target version if necessary.
@@ -143,7 +141,6 @@ def load(metadata: SupportsRead, target_version_spec: VersionSpec) -> Metadata:
 
 
 __all__ = [
-    "Metadata",
     "VersionSpec",
     "validate_metadata",
     "migrate_metadata",
