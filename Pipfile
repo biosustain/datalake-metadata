@@ -1,4 +1,5 @@
 # This file describes setup for library development
+
 [[source]]
 url = "https://pypi.org/simple"
 verify_ssl = true
@@ -9,6 +10,7 @@ datalake-metadata = {file = ".", editable = true}
 
 [dev-packages]
 coverage = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.11"

@@ -100,26 +100,23 @@ class TestCoreUtils(unittest.TestCase):
             # Metadata should be validated after each migration
             validate_mock.assert_called_once()
 
-    @patch("datalake_metadata.version")
-    def test_update_version_add_lib_prerelease_and_build(self, mock_lib_version):
+    @patch.object(datalake_metadata, "library_version", Version("0.0.3-dev7+gabcdef"))
+    def test_update_version_add_lib_prerelease_and_build(self):
         init_version = "0.0.1"
-        prerelease = "dev1"
-        build = "g09c8aa3"
-        mock_lib_version.version_tuple = (0, 0, 3, prerelease, build)
         instance = dict(version=init_version)
         updated_version = datalake_metadata.update_version(instance, Version("0.0.2"))
         self.assertEqual(
-            updated_version,
-            Version(instance["version"]),
+            str(updated_version),
+            instance["version"],
             "Version should be updated in place",
         )
         self.assertEqual(
-            tuple([prerelease]),
+            tuple(["dev7"]),
             updated_version.prerelease,
             "Prerelease should be updated to library version",
         )
         self.assertEqual(
-            tuple([build]),
+            tuple(["gabcdef"]),
             updated_version.build,
             "Build should be updated to library version",
         )
