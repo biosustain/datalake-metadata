@@ -103,7 +103,7 @@ def loads(
 
     This function also migrates the metadata to the target version if necessary.
     Returned metadata is already validated.
-    It is intended in place of `json.loads` function.
+    It is intended as replacement of `json.loads` function.
 
     NOTE: This function migrates/modifies the metadata in place.
 
@@ -117,23 +117,14 @@ def loads(
     return migrate_metadata(metadata, target_version_spec)
 
 
-# Extracted from stdlib typeshed
-_T_co = TypeVar("_T_co", str, bytes, covariant=True)
-
-
-@runtime_checkable
-class SupportsRead(Protocol[_T_co]):
-    def read(self, __length: int = ...) -> _T_co: ...
-
-
 def load(
-    metadata: SupportsRead, target_version_spec: Union[BaseSpec, str]
+    metadata, target_version_spec: Union[BaseSpec, str]
 ) -> Dict[str, Any]:
     """Load metadata from a file-like object
 
     This function also migrates the metadata to the target version if necessary.
     Returned metadata is already validated.
-    It is intended in place of `json.load` function.
+    It is intended as replacement of `json.load` function.
 
     :param metadata: file-like object containing json encoded metadata
     :param target_version_spec: target version example: "=0.1.*"
@@ -142,9 +133,34 @@ def load(
     return loads(json.load(metadata), target_version_spec)
 
 
+def dumps(metadata: Dict[str, Any]) -> str:
+    """Dump metadata to a json string
+
+    It is intended as replacement of `json.dumps` function.
+
+    :param metadata: metadata as a dictionary
+    :return: metadata as a json string
+    """
+    return json.dumps(metadata)
+
+
+def dump(metadata: Dict[str, Any], file) -> None:
+    """Dump metadata to a file-like object
+
+    It is intended as replacement of `json.dump` function.
+
+    :param metadata: metadata as a dictionary
+    :param file: file-like object to write the metadata
+    :return: None
+    """
+    json.dump(metadata, file)
+
+
 __all__ = [
     "validate_metadata",
     "migrate_metadata",
     "loads",
     "load",
+    "dumps",
+    "dump"
 ]

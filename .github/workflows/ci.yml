@@ -69,6 +69,21 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ github.token }}
 
+      - name: Schema immutability check
+        run: |
+            if ${{ github.event_name == 'pull_request' }}; then
+                commits_arg="-r HEAD^1 HEAD"
+            else
+                commits_arg="${{ github.event.before }} ${{ github.event.after }}"
+            fi
+            changed_schema_files=$(git diff --name-only --diff-filter=ac $commits_arg -- datalake_metadata/schemas | xargs)
+            if [ ! -z "$changed_schema_files" ]
+            then
+                  echo -e "Following immutable schemas were changed:"
+                  git diff --color --diff-filter=ac $commits_arg -- datalake_metadata/schemas | cat
+                  exit 1
+            fi
+
   code-quality-check:
     name: Code quality check
     uses: biosustain/code-quality-check/.github/workflows/code-quality-check.yml@v1.0.0
