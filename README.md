@@ -4,11 +4,11 @@
 
 | Name                               |    Stmts |     Miss |   Cover |   Missing |
 |----------------------------------- | -------: | -------: | ------: | --------: |
-| datalake\_metadata/\_\_init\_\_.py |       49 |        0 |    100% |           |
+| datalake\_metadata/\_\_init\_\_.py |       49 |        2 |     96% |  144, 156 |
 | datalake\_metadata/version.py      |       11 |        2 |     82% |       5-6 |
 | tests/\_\_init\_\_.py              |        0 |        0 |    100% |           |
 | tests/test\_core\_utils.py         |       60 |        9 |     85% |    86-101 |
-|                          **TOTAL** |  **120** |   **11** | **91%** |           |
+|                          **TOTAL** |  **120** |   **13** | **89%** |           |
 
 
 ## Setup coverage badge
