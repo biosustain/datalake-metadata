@@ -25,7 +25,7 @@ The library version is updated according to the following rules:
 - Major, minor, and patch should reflect newest schema version.
 - Pre-release is in format "devN" where N is the number of commits since the last release.
 - Build is in format "g{short commit hash}".
-- 
+
 For more details please refer to [hatch-vcs](https://github.com/ofek/hatch-vcs) and [setuptools-scm](https://setuptools-scm.readthedocs.io/en/latest/usage/#default-versioning-scheme) documentation.
 
 ## Usage

@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 from string import Template
-from typing import Any, Dict, Protocol, TypeVar, Union, runtime_checkable
+from typing import Any, Dict, Protocol, Union
 
 from jsonschema import validate
 from semantic_version import SimpleSpec, Version
@@ -117,9 +117,7 @@ def loads(
     return migrate_metadata(metadata, target_version_spec)
 
 
-def load(
-    metadata, target_version_spec: Union[BaseSpec, str]
-) -> Dict[str, Any]:
+def load(metadata, target_version_spec: Union[BaseSpec, str]) -> Dict[str, Any]:
     """Load metadata from a file-like object
 
     This function also migrates the metadata to the target version if necessary.
@@ -156,11 +154,4 @@ def dump(metadata: Dict[str, Any], file) -> None:
     json.dump(metadata, file)
 
 
-__all__ = [
-    "validate_metadata",
-    "migrate_metadata",
-    "loads",
-    "load",
-    "dumps",
-    "dump"
-]
+__all__ = ["validate_metadata", "migrate_metadata", "loads", "load", "dumps", "dump"]
