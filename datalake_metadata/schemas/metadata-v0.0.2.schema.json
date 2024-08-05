@@ -29,11 +29,7 @@
               "type": "string"
             }
           },
-          "required": [
-            "dataset_id",
-            "data_type",
-            "instrument"
-          ]
+          "required": ["dataset_id", "data_type", "instrument"]
         },
         "Benchling_Experiment_metadata": {
           "type": "object",
@@ -45,9 +41,7 @@
               "type": "string"
             }
           },
-          "required": [
-            "experiment_id"
-          ]
+          "required": ["experiment_id"]
         },
         "Benchling_Request_metadata": {
           "type": "object",
@@ -59,9 +53,7 @@
               "type": "string"
             }
           },
-          "required": [
-            "request_id"
-          ]
+          "required": ["request_id"]
         }
       }
     },
@@ -72,9 +64,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "path"
-      ]
+      "required": ["path"]
     },
     "CKAN_Resources": {
       "type": "array",
@@ -88,15 +78,9 @@
             "type": "string"
           }
         },
-        "required": [
-          "resource_name",
-          "path"
-        ]
+        "required": ["resource_name", "path"]
       }
     }
   },
-  "required": [
-    "version",
-    "Dataset"
-  ]
+  "required": ["version", "Dataset"]
 }
