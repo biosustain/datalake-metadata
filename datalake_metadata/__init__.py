@@ -1,4 +1,6 @@
 import json
+import logging
+import warnings
 from pathlib import Path
 from string import Template
 from typing import Any, Dict, Protocol, Union
@@ -66,7 +68,28 @@ class Migration(Protocol):
         """
 
 
-migrations: Dict[BaseSpec, Migration] = {}
+def migrate_to_0_0_2(instance):
+    # Adding project_id field raises no conflicts with existing metadata
+    # making fields optional does not require migration
+    # NOTE: this should have been patch release!
+    instance.update({"version": "0.0.2"})
+
+
+def migrate_to_1_0_0(instance):
+    # Making project_id required property is a breaking change
+    warnings.warn(
+        "Project ID is now a required property. "
+        "Validation for this migration will fail if project_id is not set."
+    )
+    # Adding optional property "Origin" is a non-breaking change
+    # and does not require migration
+    instance.update({"version": "1.0.0"})
+
+
+migrations: Dict[BaseSpec, Migration] = {
+    SimpleSpec("<0.0.2"): migrate_to_0_0_2,
+    SimpleSpec(">=0.0.2,<1.0.0"): migrate_to_1_0_0,
+}
 
 
 def migrate_metadata(instance, target_version_spec: Union[BaseSpec, str]):
@@ -87,8 +110,12 @@ def migrate_metadata(instance, target_version_spec: Union[BaseSpec, str]):
             break
         if spec.match(current_version):
             migration(instance)
+            logging.debug(
+                "Processed migration to version %s; validating", current_version
+            )
             validate_metadata(instance)
             current_version = Version(instance["version"])
+            logging.info("Metadata migrated to %s", current_version)
 
     if not target_version_spec.match(current_version):
         raise ValueError(f"Could not migrate metadata to {target_version_spec}")

@@ -1,10 +1,14 @@
 import json
+import os
+import re
 import unittest
+from pathlib import Path
 from unittest.mock import patch
 
-import datalake_metadata
 from jsonschema import Draft202012Validator
 from semantic_version import SimpleSpec, Version
+
+import datalake_metadata
 
 
 class TestCoreUtils(unittest.TestCase):
@@ -18,6 +22,7 @@ class TestCoreUtils(unittest.TestCase):
             "version": "0.0.1-alpha",
             "Dataset": {
                 "CKAN_dataset_metadata": {
+                    "project_id": "example_project_id",
                     "dataset_id": "example_dataset_id",
                     "data_type": "example_data_type",
                     "instrument": "example_instrument",
@@ -61,8 +66,21 @@ class TestCoreUtils(unittest.TestCase):
 
     def test_migration_not_implemented(self):
         metadata = self.get_metadata()
-        with self.assertRaises(ValueError):
-            datalake_metadata.migrate_metadata(metadata, "=0.2.0")
+        schema_files = os.listdir(Path(datalake_metadata.__file__).parent / "schemas")
+        schema_version_strings = (
+            re.fullmatch(r"^metadata-v(?P<version>.*).schema.json$", schema_file).group(
+                "version"
+            )
+            for schema_file in schema_files
+        )
+        schema_versions = (
+            Version(schema_version_string)
+            for schema_version_string in schema_version_strings
+        )
+        lastest_schema_version = SimpleSpec("*").select(schema_versions)
+        datalake_metadata.migrate_metadata(
+            metadata, f"={lastest_schema_version.truncate()}"
+        )
 
     @patch.object(datalake_metadata, "validate_metadata")
     @patch.object(datalake_metadata, "migrations", new_callable=dict)
