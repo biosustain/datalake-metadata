@@ -66,7 +66,7 @@ class TestCoreUtils(unittest.TestCase):
 
     def test_migration_not_implemented(self):
         metadata = self.get_metadata()
-        schema_files = os.listdir(Path("../datalake_metadata/schemas"))
+        schema_files = os.listdir(Path(datalake_metadata.__file__).parent / "schemas")
         schema_version_strings = (
             re.fullmatch(r"^metadata-v(?P<version>.*).schema.json$", schema_file).group(
                 "version"
