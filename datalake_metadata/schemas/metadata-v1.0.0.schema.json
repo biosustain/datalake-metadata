@@ -24,9 +24,12 @@
                 },
                 "dataset_id": {
                   "type": "string"
+                },
+                "data_type": {
+                  "type": "string"
                 }
               },
-              "required": ["project_id", "dataset_id"]
+              "required": ["project_id", "data_type", "dataset_id"]
             },
             {
               "type": "object",
